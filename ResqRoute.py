@@ -217,7 +217,7 @@ if start_webcam:
 st.markdown(
     """
     <div class="footer">
-        <p>Developed with ❤️ by ResQRoute Team | © 2023</p>
+        <p>Developed with ❤️ by ResQRoute Team3 | © 2025</p>
     </div>
     """,
     unsafe_allow_html=True,

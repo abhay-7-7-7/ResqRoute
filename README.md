@@ -38,6 +38,9 @@ assessment.
 5. **Optimized Emergency Care:** Predictive analytics help doctors **make faster, more accurate decisions**
 for treatment.
 
+
+we have added a jpeg file named symbol as an example to show what all images the program can detect
+
 ## Team members: 
 ## Abhay Parameswer R
 ## Adithya Narayan V S

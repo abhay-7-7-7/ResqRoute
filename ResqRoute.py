@@ -4,6 +4,84 @@ import cv2
 import streamlit as st
 from PIL import Image
 
+# Custom CSS for styling
+st.markdown(
+    """
+    <style>
+    /* Title and Header */
+    .title {
+        font-size: 48px !important;
+        font-weight: bold;
+        text-align: center;
+        color: #ffffff;
+        background: linear-gradient(90deg, #FF416C, #FF4B2B);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    .subtitle {
+        font-size: 20px !important;
+        text-align: center;
+        color: #555555;
+        margin-bottom: 40px;
+    }
+    /* Card Design */
+    .card {
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        margin-bottom: 20px;
+    }
+    .card h2 {
+        font-size: 24px;
+        color: #333333;
+        margin-bottom: 10px;
+    }
+    .card p {
+        font-size: 16px;
+        color: #666666;
+    }
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        margin-top: 40px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Hero Section
+st.markdown(
+    """
+    <div class="title">
+        AMBULANCE DETECTION SYSTEM
+    </div>
+    <div class="subtitle">
+        Every second counts - every route optimized
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+# App Description
+st.markdown(
+    """
+    <div class="card">
+        <h2>🚑 About ResQRoute</h2>
+        <p>
+            Every second counts in a medical emergency, yet countless lives are lost due to delayed ambulance arrivals caused by traffic congestion. 
+            ResQRoute is an AI-powered system designed to detect ambulances in traffic, create a clear pathway, and ensure they reach their destination as quickly as possible.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
 # Function to process the image and detect contours
 def getContours(img, imgContour):
     contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
@@ -58,39 +136,57 @@ def getContours(img, imgContour):
                             cv2.putText(imgContour, objectType, (x + w // 2 - 50, y + h + 25),
                                         cv2.FONT_HERSHEY_COMPLEX, 0.60, (0, 255, 0), 2)
 
-# Streamlit UI
-st.title("AMBULANCE DETECTION SYSTEM")
-st.write("Every second counts - every route optimized")
-st.write("""
-Every second counts in a medical emergency, yet countless lives are lost due to delayed ambulance arrivals caused by traffic congestion. 
-ResQRoute is an AI-powered system designed to detect ambulances in traffic, create a clear pathway, and ensure they reach their destination as quickly as possible.
-""")
+# Input Options (Upload Image or Webcam)
+col1, col2 = st.columns(2)
 
+with col1:
+    st.markdown(
+        """
+        <div class="card">
+            <h2>📷 Upload an Image</h2>
+            <p>
+                Upload an image of a traffic scene to detect ambulances. Supported formats: JPG, JPEG, PNG.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"], key="uploader")
 
-# Upload image or use webcam
-option = st.radio("Choose input source:", ("Upload an image", "Use webcam"))
+with col2:
+    st.markdown(
+        """
+        <div class="card">
+            <h2>🎥 Use Webcam</h2>
+            <p>
+                Use your webcam to detect ambulances in real-time. Press the button below to start the webcam feed.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    start_webcam = st.button("Start Webcam", key="webcam_button")
 
-if option == "Upload an image":
-    uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-    if uploaded_file is not None:
-        image = Image.open(uploaded_file)
-        img = np.array(image)
-        imgContour = img.copy()
-        imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        imgBlur = cv2.GaussianBlur(imgGray, (7, 7), 0.5)
-        imgCanny = cv2.Canny(imgBlur, 50, 50)
-        getContours(imgCanny, imgContour)
+# Process Uploaded Image
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    img = np.array(image)
+    imgContour = img.copy()
+    imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    imgBlur = cv2.GaussianBlur(imgGray, (7, 7), 0.5)
+    imgCanny = cv2.Canny(imgBlur, 50, 50)
+    getContours(imgCanny, imgContour)
 
-        st.image(imgContour, caption="Processed Image", use_container_width=True)
+    st.image(imgContour, caption="Processed Image", use_container_width=True)
 
-elif option == "Use webcam":
-    st.write("Press the button below to start webcam capture.")
-    start_webcam = st.button("Start Webcam")
-
-    if start_webcam:
-        cap = cv2.VideoCapture(0)
+# Process Webcam Feed
+if start_webcam:
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        st.error("Failed to open webcam.")
+    else:
         stframe = st.empty()
-        stop_webcam = st.button("Stop Webcam")
+        stop_webcam = st.button("Stop Webcam", key="stop_webcam_button")
 
         while cap.isOpened() and not stop_webcam:
             ret, frame = cap.read()
@@ -115,5 +211,14 @@ elif option == "Use webcam":
         # Release the webcam and clean up
         cap.release()
         cv2.destroyAllWindows()
-        st.write('''Webcam stopped we are facing technical issues please run the code locally 
-                 please try uploading thhe image or try after some time''')
+        st.write('Webcam stopped. Please try uploading an image or try again later.')
+
+# Footer
+st.markdown(
+    """
+    <div class="footer">
+        <p>Developed with ❤️ by ResQRoute Team | © 2023</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)

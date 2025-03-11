@@ -1,5 +1,5 @@
 # ABHAY PARAMESWER R
-# ResqQRoute
+## ResqQRoute
 https://github.com/abhay-7-7-7/ResqRoute.git
 
 ResQRoute: AI-Powered Ambulance Traffic
@@ -65,6 +65,7 @@ to revolutionize traffic management and healthcare accessibility.
 This document serves as an initial proposal. Let me know if you’d like any refinements or
 additions!
 
-team members: Adithya Narayan V S
-              Niranjan A
-              Mohammed Irfan
+#Team members: 
+#Adithya Narayan V S
+#Niranjan A
+#Mohammed Irfan

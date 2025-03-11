@@ -115,4 +115,5 @@ elif option == "Use webcam":
         # Release the webcam and clean up
         cap.release()
         cv2.destroyAllWindows()
-        st.write("Webcam stopped we are facing technical issues please run the code locally")
+        st.write('''Webcam stopped we are facing technical issues please run the code locally 
+                 please try uploading thhe image or try after some time''')
